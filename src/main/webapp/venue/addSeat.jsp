@@ -200,11 +200,11 @@
 	    		return;
 	    	}
 	    	
-	        var name = $("#nameInput").val();
+	        var seatname = $("#nameInput").val();
 	        var amount = $("#amountInput").val();
 	        var price = $("#priceInput").val();
 	        
-	        if (name == "") {
+	        if (seatname == "") {
 	            alert("座位名称不能为空");
 	            return;
 	        }
@@ -223,7 +223,7 @@
 	            url: path + "/venue/addSeat.action",
 	            data: {"venueid":id,
 	            	"showid":showid,
-	            	"name":name,
+	            	"name":seatname,
 	            	"amount":amount,
 	            	"price":price
 	            	},

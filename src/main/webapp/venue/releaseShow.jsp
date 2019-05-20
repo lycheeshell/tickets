@@ -115,7 +115,7 @@
 				<div class="col-lg-6 col-md-6">
 					<div class="card">
 						<div class="card-body">
-							<h4 class="card-title">上传演出图片</h4>
+							<h4 class="card-title">上传演出图片jpg</h4>
 							<input type="file" id="file" class="dropify" />
 						</div>
 					</div>
@@ -245,7 +245,7 @@
     	        var file = $('#file').get(0).files[0]; //获取上传的文件
     	        var fileSize = file.size;           //获取上传的文件大小
     	        var maxSize = 5242880;              //最大1MB
-    	        if (ext != '.JPG' && ext != '.JPEG') {
+    	        if (ext != '.JPG') {
     	            alert('文件类型错误,请上传JPG类型');
     	            return false;
     	        } else if (parseInt(fileSize) >= parseInt(maxSize)) {

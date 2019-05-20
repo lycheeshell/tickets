@@ -1,6 +1,7 @@
 package edu.nju.tickets.controller;
 
 import java.io.FileOutputStream;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import edu.nju.tickets.pojo.Seat;
+import edu.nju.tickets.pojo.Show;
 import edu.nju.tickets.pojo.Venue;
 import edu.nju.tickets.service.VenueService;
 import edu.nju.tickets.util.StringUtil;
@@ -148,6 +151,43 @@ public class VenueController {
         int price = Integer.parseInt(request.getParameter("price"));
         
         return venueService.addSeat(venueid, showid, name, amount, price);
+    }
+    
+    /**获取场馆的演出
+     * 
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/getShows.action", method=RequestMethod.POST)
+    public List<Show> getShows(int id) {
+    	List<Show> list = venueService.getShows(id);
+    	System.out.println(list);
+        return list;
+    }
+    
+    /**获取演出的剩余座位
+     * 
+     * @param showid
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/getSeats.action", method=RequestMethod.POST)
+    public List<Seat> getSeats(int showid) {
+    	List<Seat> list = venueService.getSeats(showid);
+    	System.out.println(list);
+        return list;
+    }
+    
+    /**现场售票
+     * 
+     * @param seatid
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/sellTicket.action", method=RequestMethod.POST)
+    public int sellTicket(int seatid) {
+        return venueService.sellTicket(seatid);
     }
 	
 }

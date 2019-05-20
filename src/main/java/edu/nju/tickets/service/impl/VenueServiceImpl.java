@@ -1,5 +1,7 @@
 package edu.nju.tickets.service.impl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -7,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import edu.nju.tickets.mapper.ShowMapper;
 import edu.nju.tickets.mapper.VenueMapper;
+import edu.nju.tickets.pojo.Seat;
+import edu.nju.tickets.pojo.Show;
 import edu.nju.tickets.pojo.Venue;
 import edu.nju.tickets.service.VenueService;
 
@@ -65,6 +69,27 @@ public class VenueServiceImpl implements VenueService {
 		}
 		
 		return showMapper.addSeat(showid, name, amount, price);
+	}
+
+	@Override
+	public List<Show> getShows(int id) {
+		return showMapper.getShows(id);
+	}
+
+	@Override
+	public List<Seat> getSeats(int showid) {
+		return showMapper.getSeats(showid);
+	}
+
+	@Transactional(rollbackFor=Exception.class)
+	@Override
+	public int sellTicket(int seatid) {
+		int beforeNum = showMapper.getAmount(seatid);
+		int sell = showMapper.updateSeatSell(seatid);
+		if(beforeNum == 0) {
+			return 0;
+		}
+		return sell;
 	}
 
 }

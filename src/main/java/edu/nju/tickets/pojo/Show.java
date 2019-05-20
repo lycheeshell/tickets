@@ -11,6 +11,12 @@ public class Show {
 	private String type;
 	private String description;
 	
+	@Override
+	public String toString() {
+		return "Show [id=" + id + ", name=" + name + ", showtime=" + showtime + ", type=" + type + ", description="
+				+ description + "]";
+	}
+	
 	public int getId() {
 		return id;
 	}

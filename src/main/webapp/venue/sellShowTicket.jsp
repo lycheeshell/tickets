@@ -3,6 +3,7 @@
     String path = request.getContextPath();
 	String id = request.getParameter("id");
 	String name = request.getParameter("name");
+	String showid = request.getParameter("showid");
 %>
 <!DOCTYPE html>
 <html>
@@ -19,6 +20,7 @@
 	var path = "<%=path%>";
 	var id = "<%=id%>";
 	var name = "<%=name%>";
+	var showid = "<%=showid%>";
 </script>
 
 <style type="text/css">
@@ -108,28 +110,45 @@
         <!-- Page wrapper  -->
         <!-- ============================================================== -->
         <div class="page-wrapper">
+        
         	<div class="container-fluid">
-        		<div class="row page-titles">
+                <div class="row page-titles">
                     <div class="col-md-5 align-self-center">
-                        <h4 class="text-themecolor">在售演出</h4>
+                        <h4 class="text-themecolor">售票</h4>
                     </div>
                     <div class="col-md-7 align-self-center text-right">
                         <div class="d-flex justify-content-end align-items-center">
                         </div>
                     </div>
                 </div>
-				<!-- Row -->
                 <div class="row">
-                    <div class="col-12">
-                        <!-- Row -->
-                        <div class="row" id="showDiv">
-                            
+                    <!-- column -->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">座位信息</h4>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>id</th>
+                                                <th>座位名称</th>
+                                                <th>座位数量</th>
+                                                <th>座位价格</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="seatTable">
+                                        
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                        <!-- Row -->
                     </div>
                 </div>
-                <!-- End Row -->        		
-        	</div>
+            </div>
+        
         </div>
         <!-- ============================================================== -->
         <!-- End Page wrapper  -->
@@ -181,39 +200,59 @@
     $(function() {
     	$.ajax({
             type: "POST",
-            url: path + "/venue/getShows.action",
-            data: {"id":id},
+            url: path + "/venue/getSeats.action",
+            data: {"showid":showid},
             dataType: "json",
             success: function (backData) {
-                setShowInfo(backData);
+                setSeatInfo(backData);
             },
             error: function() {
-            	alert("获取演出信息失败");
+            	alert("获取座位信息失败");
             }
         });
     })
     
-    function setShowInfo(shows) {
-    	$("#showDiv").html("");
+    function setSeatInfo(seats) {
+    	$("#seatTable").html("");
         var html = "";
-        for(var i = 0;i<shows.length;i++){
-        	var item = shows[i];
-        	html += "<div class='col-lg-3 col-md-6'>";
-        	html += "<div class='card'>";
-        	
-        	var showName = item.name + "venue" + id;
-        	html += "<img class='card-img-top img-responsive' src='" + path + "/dist/images/venue/" + showName + ".jpg' alt='Card image cap'>";
-        	
-        	html += "<div class='card-body'>";
-        	
-        	html += "<a href='" + path + "/venue/sellShowTicket.jsp?id=" + id + "&name=" + name + "&showid=" + item.id + "' class='btn btn-primary'>" + item.name + "</a>";
-        	
-        	html += "</div>";
-        	html += "</div>";
-        	html += "</div>";
+        for(var i = 0;i<seats.length;i++){
+        	var item = seats[i];
+        	html += "<tr>";
+        	html += "<td>" + item.id + "</td>";
+        	html += "<td>" + item.name + "</td>";
+        	html += "<td>" + item.amount + "</td>";
+        	html += "<td>" + item.price + "</td>";
+        	html += "<td><button type='button' class='label label-danger sellButton'>购买</button></td>";
+        	html += "</tr>";
         }
-        $("#showDiv").html(html);
+        $("#seatTable").html(html);
     }
+    
+    $(document).on("click",".sellButton",function(){
+    	var tr = $(this).closest("tr");
+    	var seatid = tr.find("td:eq(0)").text();
+    	var seatName = tr.find("td:eq(1)").text();
+    	var seatAmount = tr.find("td:eq(2)").text();
+    	$.ajax({
+            type: "POST",
+            url: path + "/venue/sellTicket.action",
+            data: {"seatid":seatid},
+            dataType: "json",
+            success: function (backData) {
+            	if (backData == 0) {
+                    alert("余票不足");
+                } else if (backData == 1) {
+                	alert("售出 " + seatName + " 一张");
+                	tr.find("td:eq(2)").text(seatAmount-1);
+                } else {
+                	alert("不可能的错误");
+                }
+            },
+            error: function() {
+            	alert("服务器错误");
+            }
+        });
+    })
     
     </script>
     

@@ -8,6 +8,11 @@ public class Seat {
 	private int amount;
 	private int price;
 	
+	@Override
+	public String toString() {
+		return "Seat [id=" + id + ", name=" + name + ", amount=" + amount + ", price=" + price + "]";
+	}
+	
 	public int getId() {
 		return id;
 	}
