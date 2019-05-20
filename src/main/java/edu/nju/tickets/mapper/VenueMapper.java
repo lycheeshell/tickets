@@ -23,4 +23,7 @@ public interface VenueMapper {
 	@Update("update t_venue set password=#{password}, name=#{name}, location=#{location}, phone=#{phone}, seat=#{seat}, state=2 where account=#{account}")
 	public int modifyVenue(Venue venue);
 
+	@Select("select seat from t_venue where id=#{0}")
+	public int getSeatNum(int venueid);
+
 }

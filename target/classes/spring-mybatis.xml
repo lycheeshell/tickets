@@ -16,17 +16,14 @@
 						http://www.springframework.org/schema/aop
 						http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 	<!-- 自动扫描 -->
-	<context:component-scan
-		base-package="edu.nju.tickets" />
+	<context:component-scan base-package="edu.nju.tickets" />
 
 	<!-- 引入配置文件 -->
-	<bean id="propertyConfigurer"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location" value="classpath:jdbc.properties" />
 	</bean>
 
-	<bean id="dataSource"
-		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${driver}" />
 		<property name="url" value="${url}" />
 		<property name="username" value="${username}" />
@@ -44,8 +41,7 @@
 	</bean>
 
 	<!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
-	<bean id="sqlSessionFactory"
-		class="org.mybatis.spring.SqlSessionFactoryBean">
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<!-- 配置mybatis的日志记录 -->
 		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
@@ -55,20 +51,16 @@
 	<!-- mapper接口所在包名，Spring会自动查找其下的类 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="edu.nju.tickets.mapper" />
-		<property name="sqlSessionFactoryBeanName"
-			value="sqlSessionFactory"></property>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
 	</bean>
 
 	<!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
-	<bean id="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
 	<!-- 事物的具体内容 -->
-	<!--
-	<tx:advice id="transactionAdvice"
-		transaction-manager="transactionManager">
+	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
 		<tx:attributes>
 			<tx:method name="add*" propagation="REQUIRED" />
 			<tx:method name="insert*" propagation="REQUIRED" />
@@ -83,14 +75,11 @@
 			<tx:method name="load*" propagation="SUPPORTS" />
 			<tx:method name="search*" propagation="SUPPORTS" />
 		</tx:attributes>
-	</tx:advice>-->
+	</tx:advice>
 
 	<!-- 定义一个切面,在定义的切面上加入事物 -->
-	<!--
 	<aop:config>
-		<aop:pointcut id="transactionPointcut"
-			expression="execution(* com.quicksure.mobile.dms*.*.*(..))" />
-		<aop:advisor pointcut-ref="transactionPointcut"
-			advice-ref="transactionAdvice" />
-	</aop:config>-->
+		<aop:pointcut id="transactionPointcut" expression="execution(* edu.nju.tickets.service..*.*(..))" />
+		<aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice" />
+	</aop:config>
 </beans>  

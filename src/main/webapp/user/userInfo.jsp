@@ -128,10 +128,12 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">账户余额</label>
+                                            <button type="submit" class="btn btn-success waves-effect waves-light m-r-10" onclick="addMoney();return false;">充值</button>
                                             <input type="text" class="form-control" id="moneyInput">
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">积分</label>
+                                            <button type="submit" class="btn btn-success waves-effect waves-light m-r-10" onclick="commuteCoupon();return false;">我的优惠券</button>
                                             <input type="text" class="form-control" id="scoreInput">
                                         </div>
                                         <div class="form-group">
@@ -297,6 +299,14 @@
 	            }
 	        });
 	    	
+	    }
+	    
+	    function addMoney() {
+	    	window.location.href = path + "/user/addMoney.jsp?id=" + id;
+	    }
+	    
+	    function commuteCoupon() {
+	    	window.location.href = path + "/user/commuteCoupon.jsp?id=" + id;
 	    }
     
     </script>

@@ -8,6 +8,9 @@ import edu.nju.tickets.pojo.User;
 
 public interface UserMapper {
 	
+	@Select("select * from t_user where id=#{0}")
+	public User selectById(int id);
+	
 	@Select("select count(*) from t_user where account=#{0}")
 	public int getUserNumber(String account);
 	
@@ -34,6 +37,12 @@ public interface UserMapper {
 
 	@Update("update t_user set state=0 where id=#{0}")
 	public int dropUser(int id);
+
+	@Update("update t_user set money=money+#{1} where id=#{0}")
+	public int addMoney(int id, int moneyToAdd);
+
+	@Update("update t_user set score=score-#{1}*100 where id=#{0}")
+	public int updateUserScore(int id, int coupon);
 	
 	
 	

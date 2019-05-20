@@ -3,6 +3,7 @@
     String path = request.getContextPath();
 	String id = request.getParameter("id");
 	String name = request.getParameter("name");
+	String showid = request.getParameter("showid");
 %>
 <!DOCTYPE html>
 <html>
@@ -13,14 +14,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>修改场馆信息</title>
+    <title>添加座位</title>
     
 <script type="text/javascript">
 	var path = "<%=path%>";
 	var id = "<%=id%>";
 	var name = "<%=name%>";
+	var showid = "<%=showid%>";
 </script>
 
+<style type="text/css">
+
+</style>
 <!-- Custom CSS -->
 <link rel="stylesheet" type="text/css" href="<%=path%>/dist/css/style.min.css" />
 
@@ -105,54 +110,32 @@
         <!-- Page wrapper  -->
         <!-- ============================================================== -->
         <div class="page-wrapper">
-        
-        	<!-- /.row -->
-                <div class="row">
+			<div class="row">
                     <div class="col-md-6">
                         <div class="card card-body">
-                            <h3 class="box-title m-b-0">修改场馆信息</h3>
+                            <h3 class="box-title m-b-0">座位信息</h3>
                             <div class="row">
                                 <div class="col-sm-12 col-xs-12">
                                     <form>
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1">账号</label>
-                                            <input type="text" class="form-control" id="accountInput">
+                                            <label for="exampleInputEmail1">座位名称</label>
+                                            <input type="text" class="form-control" id="nameInput" placeholder="请输入座位名称">
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputPassword1">密码</label>
-                                            <input type="password" class="form-control" id="passwordInput" placeholder="请输入密码" >
+                                            <label for="exampleInputEmail1">座位数量</label>
+                                            <input type="text" class="form-control" id="amountInput" placeholder="请输入座位数量">
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputPassword1">确认密码</label>
-                                            <input type="password" class="form-control" id="confirmedPasswordInput" placeholder="请确认密码" >
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">名称</label>
-                                            <input type="text" class="form-control" id="nameInput">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">位置</label>
-                                            <input type="text" class="form-control" id="locationInput">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">电话</label>
-                                            <input type="text" class="form-control" id="phoneInput">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">座位数</label>
-                                            <input type="text" class="form-control" id="seatInput">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">账户余额</label>
-                                            <input type="text" class="form-control" id="moneyInput">
+                                            <label for="exampleInputEmail1">座位价格</label>
+                                            <input type="text" class="form-control" id="priceInput" placeholder="请输入座位价格">
                                         </div>
                                         <div class="form-group">
                                             <div class="checkbox checkbox-success">
                                                 <input id="checkbox1" type="checkbox">
-                                                <label for="checkbox1">修改提交经理审核期间将不能登录使用！</label>
+                                                <label for="checkbox1">单次添加一种座位</label>
                                             </div>
                                         </div>
-                                        <button type="submit" class="btn btn-success waves-effect waves-light m-r-10" onclick="modifyVenue();return false;">提交</button>
+                                        <button type="submit" class="btn btn-success waves-effect waves-light m-r-10" onclick="addSeat();return false;">提交</button>
                                     </form>
                                 </div>
                             </div>
@@ -188,6 +171,7 @@
     <script src="<%=path%>/dist/js/waves.js"></script>
     <!--Custom JavaScript -->
     <script src="<%=path%>/dist/js/custom.min.js"></script>
+    
     <script type="text/javascript">
         $(function() {
             $(".preloader").fadeOut();
@@ -196,103 +180,68 @@
     
     <script type="text/javascript">
     
-	    $(function() {
-	        $("#venueName").text(name);
-	    });
+	    function fix(num, length) {
+	    	return ('' + num).length < length ? ((new Array(length + 1)).join('0') + num).slice(-length) : '' + num;
+	    }
 	    
-	    $(function() {
-	        //进入页面时加载场馆信息
-	        var accountInput = $("#accountInput");
-	        var passwordInput = $("#passwordInput");
-	        var confirmedPasswordInput = $("#confirmedPasswordInput");
-	        var nameInput = $("#nameInput");
-	        var locationInput = $("#locationInput");
-	        var phoneInput = $("#phoneInput");
-	        var seatInput = $("#seatInput");
-	        var moneyInput = $("#moneyInput");
-	        
-	        $.ajax({
-	            type: "POST",
-	            url: path + "/venue/getVenueInfo.action",
-	            data: {"id":id},
-	            dataType: "json",
-	            success: function (backData) {
-	            	accountInput.val(backData.account);
-	    	        accountInput.attr("readonly","readonly");
-	    	        nameInput.val(backData.name);
-	    	        locationInput.val(backData.location);
-	    	        phoneInput.val(backData.phone);
-	    	        seatInput.val(backData.seat);
-	    	        moneyInput.val(backData.money);
-	    	        moneyInput.attr("readonly","readonly");
-	            },
-	            error: function() {
-	            	alert("获取场馆信息失败");
-	            }
-	        });
-	    });
-	    
-	    function modifyVenue(){
+	    $(document).on("click","#modifyVenue",function(){
+	    	window.location.href = path + "/venue/venueInfo.jsp?id=" + id + "&name=" + name;
+	    })
+    
+    </script>
+    
+    <script type="text/javascript">
+    
+	    function addSeat(){
+	    	
 	    	var allow = $("#checkbox1").is(":checked");
 	    	if(allow == false) {
 	    		alert("请接收协议");
 	    		return;
 	    	}
 	    	
-	    	var account = $("#accountInput").val();
-	        var password = $("#passwordInput").val();
-	        var confirmedPassword = $("#confirmedPasswordInput").val();
 	        var name = $("#nameInput").val();
-	        var location = $("#locationInput").val();
-	        var phone = $("#phoneInput").val();
-	        var seat = $("#seatInput").val();
+	        var amount = $("#amountInput").val();
+	        var price = $("#priceInput").val();
 	        
-	        if (password != confirmedPassword) {
-	            alert("两次输入密码不一样");
-	            return;
-	        }
-	        if (password == "") {
-	            alert("密码不能为空");
-	            return;
-	        }
 	        if (name == "") {
-	            alert("名称不能为空");
+	            alert("座位名称不能为空");
 	            return;
 	        }
-	        if (location == "") {
-	            alert("位置不能为空");
+	        if (amount == "") {
+	            alert("座位数量不能为空");
 	            return;
 	        }
-	        if (phone == "") {
-	            alert("电话不能为空");
+	        if (price == "") {
+	            alert("座位价格不能为空");
 	            return;
 	        }
-	        if (seat == "") {
-	            alert("座位数不能为空");
-	            return;
-	        }
+	        
 	        
 	        $.ajax({
 	            type: "POST",
-	            url: path + "/venue/modifyVenue.action",
-	            data: {"account":account,
-	            	"password":password,
+	            url: path + "/venue/addSeat.action",
+	            data: {"venueid":id,
+	            	"showid":showid,
 	            	"name":name,
-	            	"location":location,
-	            	"phone":phone,
-	            	"seat":seat
+	            	"amount":amount,
+	            	"price":price
 	            	},
 	            dataType: "json",
 	            success: function (backData) {
-	                if (backData == 0) {
-	                    alert("修改场馆信息失败");
+	            	if(backData == -1) {
+	            		alert("已有该种座位，新增座位失败");
+	            	} else if(backData == -2) {
+	            		alert("座位总数超出场馆总座位数，新增座位失败");
+	            	} else if(backData == 0) {
+	                    alert("新增座位失败");
 	                } else {
-	                	alert("请等待经理审核后登录");
-	                    window.location.href = path + "/venue/login.jsp";
+	                	alert("新增座位成功，请继续添加演出座位");
+	                	window.location.href = path + "/venue/addSeat.jsp?id=" + id + "&name=" + name + "&showid=" + showid;
 	                }
 	            },
 	            error: function() {
-	            	alert("修改场馆信息失败");
+	            	alert("新增座位失败");
 	            }
 	        });
 	    }

@@ -1,6 +1,7 @@
 package edu.nju.tickets.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.nju.tickets.pojo.Coupon;
 import edu.nju.tickets.pojo.User;
 import edu.nju.tickets.service.UserService;
 
@@ -91,6 +93,42 @@ public class UserController {
     @RequestMapping(value= "/dropUser.action",method=RequestMethod.POST)
     public int dropUser(int id) {
         return userService.dropUser(id);
+    }
+    
+    /**用户充值
+     * 
+     * @param id
+     * @param moneyToAdd
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value= "/addMoney.action",method=RequestMethod.POST)
+    public int addMoney(int id, int moneyToAdd) {
+        return userService.addMoney(id, moneyToAdd);
+    }
+    
+    /**兑换优惠券
+     * 
+     * @param id
+     * @param coupon
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value= "/addCoupon.action",method=RequestMethod.POST)
+    public int addCoupon(int id, int coupon) {
+        return userService.addCoupon(id, coupon);
+    }
+    
+    /**获取用户的优惠券
+     * 
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/getCoupons.action", method=RequestMethod.POST)
+    public List<Coupon> getCoupons(int id) {
+    	List<Coupon> list = userService.getCoupons(id);
+    	System.out.println(list);
+        return list;
     }
     
 }  

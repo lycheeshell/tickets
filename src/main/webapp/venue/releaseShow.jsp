@@ -26,6 +26,8 @@
 </style>
 <!-- Custom CSS -->
 <link rel="stylesheet" type="text/css" href="<%=path%>/dist/css/style.min.css" />
+<link rel="stylesheet" type="text/css" href="<%=path%>/dist/css/pages/dropify.min.css">
+<link rel="stylesheet" type="text/css" href="<%=path%>/dist/css/bootstrap-select.min.css">
 
 </head>
 
@@ -109,7 +111,57 @@
         <!-- ============================================================== -->
         <div class="page-wrapper">
         
-        	
+        	<div class="row">
+				<div class="col-lg-6 col-md-6">
+					<div class="card">
+						<div class="card-body">
+							<h4 class="card-title">上传演出图片</h4>
+							<input type="file" id="file" class="dropify" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+                    <div class="col-md-6">
+                        <div class="card card-body">
+                            <h3 class="box-title m-b-0">演出信息</h3>
+                            <div class="row">
+                                <div class="col-sm-12 col-xs-12">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">名称</label>
+                                            <input type="text" class="form-control" id="nameInput" placeholder="请输入演出名称">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">演出类型</label><br/>
+                                            <select id="showTypeInput" class="selectpicker" data-style="form-control btn-secondary">
+	                                            <option>演唱会</option>
+	                                            <option>舞蹈</option>
+	                                            <option>话剧</option>
+	                                            <option>体育比赛</option>
+                                        	</select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">演出时间</label>
+                                            <input class="form-control" type="datetime-local" value="2019-09-16T20:00:00" id="showTimeInput">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">演出描述</label>
+                                            <input type="text" class="form-control" id="descriptionInput" placeholder="请输入演出描述">
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="checkbox checkbox-success">
+                                                <input id="checkbox1" type="checkbox">
+                                                <label for="checkbox1">确认发布演出</label>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-success waves-effect waves-light m-r-10" onclick="addShow();return false;">提交</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
         
         </div>
         <!-- ============================================================== -->
@@ -139,21 +191,134 @@
     <script src="<%=path%>/dist/js/waves.js"></script>
     <!--Custom JavaScript -->
     <script src="<%=path%>/dist/js/custom.min.js"></script>
+    <!-- jQuery file upload -->
+    <script src="<%=path%>/dist/js/dropify.min.js"></script>
+    <script src="<%=path%>/dist/js/bootstrap-select.min.js" type="text/javascript"></script>
+    <script>
+    $(document).ready(function() {
+        // Basic
+        $('.dropify').dropify();
+
+        
+    });
+    </script>
+    
     <script type="text/javascript">
         $(function() {
             $(".preloader").fadeOut();
         });
+        jQuery(document).ready(function() {
+        	// For select 2
+            $(".select2").select2();
+            $('.selectpicker').selectpicker();
+        })
     </script>
     
     <script type="text/javascript">
     
 	    $(function() {
 	        $("#venueName").text(name);
+	        var now = new Date();
+	        var str = now.getFullYear() + "-" + fix((now.getMonth() + 1),2) + "-" + fix(now.getDate(),2) + "T" + fix(now.getHours(),2) + ":" + fix(now.getMinutes(),2);
+	        $("#showTimeInput").val(str);
 	    });
+	    
+	    function fix(num, length) {
+	    	return ('' + num).length < length ? ((new Array(length + 1)).join('0') + num).slice(-length) : '' + num;
+	    }
 	    
 	    $(document).on("click","#modifyVenue",function(){
 	    	window.location.href = path + "/venue/venueInfo.jsp?id=" + id + "&name=" + name;
 	    })
+    
+    </script>
+    
+    <script type="text/javascript">
+    
+    	function testFile() {
+    		var animateimg = $("#file").val(); //获取上传的图片名 带//
+    	    if (animateimg != "") {                               //是否有上传图片
+    	        var imgarr = animateimg.split('\\'); //分割
+    	        var myimg = imgarr[imgarr.length - 1]; //去掉 // 获取图片名
+    	        var houzui = myimg.lastIndexOf('.'); //获取 . 出现的位置
+    	        var ext = myimg.substring(houzui, myimg.length).toUpperCase();  //切割 . 获取文件后缀
+    	        var file = $('#file').get(0).files[0]; //获取上传的文件
+    	        var fileSize = file.size;           //获取上传的文件大小
+    	        var maxSize = 5242880;              //最大1MB
+    	        if (ext != '.JPG' && ext != '.JPEG') {
+    	            alert('文件类型错误,请上传JPG类型');
+    	            return false;
+    	        } else if (parseInt(fileSize) >= parseInt(maxSize)) {
+    	            alert('上传的文件不能超过5MB');
+    	            return false;
+    	        }
+    	    }
+    	}
+    
+	    function addShow(){
+	    	
+	    	testFile();
+	    	
+	    	var allow = $("#checkbox1").is(":checked");
+	    	if(allow == false) {
+	    		alert("请接收协议");
+	    		return;
+	    	}
+	    	
+	        var showName = $("#nameInput").val();
+	        var showType = $("#showTypeInput").find("option:selected").text();
+	        var showTime = $("#showTimeInput").val();
+	        var showDescription = $("#descriptionInput").val();
+	        
+	        if (showName == "") {
+	            alert("演出名称不能为空");
+	            return;
+	        }
+	        if (showType == "") {
+	            alert("演出类型不能为空");
+	            return;
+	        }
+	        if (showTime == "") {
+	            alert("演出时间不能为空");
+	            return;
+	        }
+	        if (showDescription == "") {
+	            alert("演出描述不能为空");
+	            return;
+	        }
+	        
+	        //当你给后台传图片时，你传的是一个文件 而不再是普通的string类型的值。而是file类型   也就是文件类型
+	        //data: formData,
+	        //processData : false,
+	        //contentType : false,
+	        var formData = new FormData();
+	        formData.append("showName",showName);
+	        formData.append("venueid",id);
+	        formData.append("showType",showType);
+	        formData.append("showTime",showTime);
+	        formData.append("showDescription",showDescription);
+	        formData.append("file",$('#file').get(0).files[0]);
+	        
+	        $.ajax({
+	            type: "POST",
+	            url: path + "/venue/addShow.action",
+	            data: formData,
+	            dataType: "json",
+	            processData : false,
+	            contentType : false,
+	            success: function (backData) {
+	                if (backData == 0) {
+	                    alert("发布演出失败");
+	                } else {
+	                	alert("发布演出成功，请添加演出座位");
+	                	window.location.href = path + "/venue/addSeat.jsp?id=" + id + "&name=" + name + "&showid=" + backData;
+	                }
+	            },
+	            error: function() {
+	            	alert("发布演出失败");
+	            }
+	        });
+	    }
     
     </script>
     

@@ -9,6 +9,11 @@ public class Coupon {
 	private int amount;
 	private Timestamp endtime;
 	
+	@Override
+	public String toString() {
+		return "Coupon [id=" + id + ", amount=" + amount + ", endtime=" + endtime + "]";
+	}
+	
 	public int getId() {
 		return id;
 	}

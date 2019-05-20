@@ -11,5 +11,9 @@ public interface VenueService {
 	public Venue getVenueInfo(int id);
 
 	public int modifyVenue(Venue venue);
+
+	public int addShow(String showName, int venueid, String showType, String showTime, String showDescription);
+
+	public int addSeat(int venueid, int showid, String name, int amount, int price);
 	
 }  

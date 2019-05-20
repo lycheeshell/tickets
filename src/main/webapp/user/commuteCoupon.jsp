@@ -2,7 +2,6 @@
 <%
     String path = request.getContextPath();
 	String id = request.getParameter("id");
-	String name = request.getParameter("name");
 %>
 <!DOCTYPE html>
 <html>
@@ -13,12 +12,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>修改场馆信息</title>
+    <title>兑换优惠券</title>
     
 <script type="text/javascript">
 	var path = "<%=path%>";
 	var id = "<%=id%>";
-	var name = "<%=name%>";
 </script>
 
 <!-- Custom CSS -->
@@ -49,7 +47,7 @@
                 <!-- Logo -->
                 <!-- ============================================================== -->
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="<%=path%>/venue/index.jsp?id=<%=id%>&name=<%=name%>">
+                    <a class="navbar-brand" href="<%=path%>/user/index.jsp?id=<%=id%>">
                         <!-- Logo icon --><b>
                             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                             <!-- Dark Logo icon -->
@@ -78,19 +76,13 @@
                             <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="<%=path%>/dist/images/venue-main.jpg" alt="user" class="img-circle" width="30"></a>
                             <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
                                 <span class="with-arrow"><span class="bg-primary"></span></span>
-                                <div class="d-flex no-block align-items-center p-15 bg-primary text-white m-b-10">
-                                    <div class=""><img src="<%=path%>/dist/images/venue-main.jpg" alt="user" class="img-circle" width="60"></div>
-                                    <div class="m-l-10">
-                                        <h4 class="m-b-0" id="venueName">场馆名</h4>
-                                    </div>
-                                </div>
-                                <a class="dropdown-item" href="<%=path%>/venue/venueInfo.jsp?id=<%=id%>&name=<%=name%>">修改场馆信息</a>
-                                <a class="dropdown-item" href="<%=path%>/venue/releaseShow.jsp?id=<%=id%>&name=<%=name%>">发布演出</a>
-                                <a class="dropdown-item" href="<%=path%>/venue/sellTicket.jsp?id=<%=id%>&name=<%=name%>">现场售票</a>
-                                <a class="dropdown-item" href="<%=path%>/venue/checkTicket.jsp?id=<%=id%>&name=<%=name%>">检票登记</a>
-                                <a class="dropdown-item" href="<%=path%>/venue/showStatistics.jsp?id=<%=id%>&name=<%=name%>">查看场馆统计信息</a>
+                                <a class="dropdown-item" href="<%=path%>/user/userInfo.jsp?id=<%=id%>">查看个人信息</a>
+                                <a class="dropdown-item" href="<%=path%>/user/bookShow.jsp?id=<%=id%>">演出预定</a>
+                                <a class="dropdown-item" href="<%=path%>/user/cancelShow.jsp?id=<%=id%>">演出退订</a>
+                                <a class="dropdown-item" href="<%=path%>/user/showOrderState.jsp?id=<%=id%>">查看订单状态</a>
+                                <a class="dropdown-item" href="<%=path%>/user/showStatistics.jsp?id=<%=id%>">查看个人统计信息</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="<%=path%>/venue/login.jsp">退出</a>
+                                <a class="dropdown-item" href="<%=path%>/user/login.jsp">退出</a>
                             </div>
                         </li>
                         <!-- ============================================================== -->
@@ -107,10 +99,38 @@
         <div class="page-wrapper">
         
         	<!-- /.row -->
+        		<div class="row">
+                    <!-- column -->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">我的优惠券</h4>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>id</th>
+                                                <th>金额</th>
+                                                <th>有效期</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="couponTable">
+                                            <!-- <tr>
+                                                <td>1</td>
+                                                <td>Deshmukh</td>
+                                                <td>Prohaska</td>
+                                            </tr> -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card card-body">
-                            <h3 class="box-title m-b-0">修改场馆信息</h3>
+                            <h3 class="box-title m-b-0">兑换优惠券</h3>
                             <div class="row">
                                 <div class="col-sm-12 col-xs-12">
                                     <form>
@@ -119,40 +139,20 @@
                                             <input type="text" class="form-control" id="accountInput">
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputPassword1">密码</label>
-                                            <input type="password" class="form-control" id="passwordInput" placeholder="请输入密码" >
+                                            <label for="exampleInputEmail1">兑换优惠券金额</label>
+                                            <input type="text" class="form-control" id="couponInput" placeholder="请输入兑换优惠券金额">
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputPassword1">确认密码</label>
-                                            <input type="password" class="form-control" id="confirmedPasswordInput" placeholder="请确认密码" >
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">名称</label>
-                                            <input type="text" class="form-control" id="nameInput">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">位置</label>
-                                            <input type="text" class="form-control" id="locationInput">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">电话</label>
-                                            <input type="text" class="form-control" id="phoneInput">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">座位数</label>
-                                            <input type="text" class="form-control" id="seatInput">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">账户余额</label>
-                                            <input type="text" class="form-control" id="moneyInput">
+                                            <label for="exampleInputEmail1">账户积分</label>
+                                            <input type="text" class="form-control" id="scoreInput">
                                         </div>
                                         <div class="form-group">
                                             <div class="checkbox checkbox-success">
                                                 <input id="checkbox1" type="checkbox">
-                                                <label for="checkbox1">修改提交经理审核期间将不能登录使用！</label>
+                                                <label for="checkbox1">100积分可兑换1元优惠券！有效期10天！</label>
                                             </div>
                                         </div>
-                                        <button type="submit" class="btn btn-success waves-effect waves-light m-r-10" onclick="modifyVenue();return false;">提交</button>
+                                        <button type="submit" class="btn btn-success waves-effect waves-light m-r-10" onclick="commuteCoupon();return false;">提交</button>
                                     </form>
                                 </div>
                             </div>
@@ -197,42 +197,69 @@
     <script type="text/javascript">
     
 	    $(function() {
-	        $("#venueName").text(name);
-	    });
+	    	$.ajax({
+	            type: "POST",
+	            url: path + "/user/getCoupons.action",
+	            data: {"id":id},
+	            dataType: "json",
+	            success: function (backData) {
+	                setCouponTable(backData);
+	            },
+	            error: function() {
+	            	alert("获取优惠券信息失败");
+	            }
+	        });
+	    })
+	    
+	    function setCouponTable(coupons) {
+	    	$("#couponTable").html("");
+	        var html = "";
+	        for(var i = 0;i<coupons.length;i++){
+	        	var item = coupons[i];
+	        	html += "<tr>";
+	        	html += "<td>" + item.id + "</td>";
+	        	html += "<td>" + item.amount + "</td>";
+	        	
+	        	var date = new Date(item.endtime);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+				var Y = date.getFullYear() + '-';
+				var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+				var D = date.getDate() + ' ';
+				var h = date.getHours() + ':';
+				var m = date.getMinutes() + ':';
+				var s = date.getSeconds();
+	        	html += "<td>" + Y+M+D+h+m+s+ "</td>";
+	        	
+	        	html += "</tr>";
+	        }
+	        $("#couponTable").html(html);
+	    }
+    
 	    
 	    $(function() {
-	        //进入页面时加载场馆信息
+	        //进入页面时加载会员信息
 	        var accountInput = $("#accountInput");
-	        var passwordInput = $("#passwordInput");
-	        var confirmedPasswordInput = $("#confirmedPasswordInput");
-	        var nameInput = $("#nameInput");
-	        var locationInput = $("#locationInput");
-	        var phoneInput = $("#phoneInput");
-	        var seatInput = $("#seatInput");
-	        var moneyInput = $("#moneyInput");
+	        var couponInput = $("#couponInput");
+	        var scoreInput = $("#scoreInput");
 	        
 	        $.ajax({
 	            type: "POST",
-	            url: path + "/venue/getVenueInfo.action",
+	            url: path + "/user/getUserInfo.action",
 	            data: {"id":id},
 	            dataType: "json",
 	            success: function (backData) {
 	            	accountInput.val(backData.account);
 	    	        accountInput.attr("readonly","readonly");
-	    	        nameInput.val(backData.name);
-	    	        locationInput.val(backData.location);
-	    	        phoneInput.val(backData.phone);
-	    	        seatInput.val(backData.seat);
-	    	        moneyInput.val(backData.money);
-	    	        moneyInput.attr("readonly","readonly");
+	    	        scoreInput.val(backData.score);
+	    	        scoreInput.attr("readonly","readonly");
 	            },
 	            error: function() {
-	            	alert("获取场馆信息失败");
+	            	alert("获取个人信息失败");
 	            }
 	        });
 	    });
 	    
-	    function modifyVenue(){
+	    function commuteCoupon(){
+	    	
 	    	var allow = $("#checkbox1").is(":checked");
 	    	if(allow == false) {
 	    		alert("请接收协议");
@@ -240,63 +267,39 @@
 	    	}
 	    	
 	    	var account = $("#accountInput").val();
-	        var password = $("#passwordInput").val();
-	        var confirmedPassword = $("#confirmedPasswordInput").val();
-	        var name = $("#nameInput").val();
-	        var location = $("#locationInput").val();
-	        var phone = $("#phoneInput").val();
-	        var seat = $("#seatInput").val();
+	        var score = $("#scoreInput").val();
+	        var coupon = $("#couponInput").val();
 	        
-	        if (password != confirmedPassword) {
-	            alert("两次输入密码不一样");
+	        if (coupon == "") {
+	            alert("充值金额不能为空");
 	            return;
 	        }
-	        if (password == "") {
-	            alert("密码不能为空");
-	            return;
-	        }
-	        if (name == "") {
-	            alert("名称不能为空");
-	            return;
-	        }
-	        if (location == "") {
-	            alert("位置不能为空");
-	            return;
-	        }
-	        if (phone == "") {
-	            alert("电话不能为空");
-	            return;
-	        }
-	        if (seat == "") {
-	            alert("座位数不能为空");
+	        if (coupon*100 > score) {
+	            alert("积分不足！");
 	            return;
 	        }
 	        
 	        $.ajax({
 	            type: "POST",
-	            url: path + "/venue/modifyVenue.action",
-	            data: {"account":account,
-	            	"password":password,
-	            	"name":name,
-	            	"location":location,
-	            	"phone":phone,
-	            	"seat":seat
+	            url: path + "/user/addCoupon.action",
+	            data: {"id":id,
+	            	"coupon":coupon
 	            	},
 	            dataType: "json",
 	            success: function (backData) {
 	                if (backData == 0) {
-	                    alert("修改场馆信息失败");
+	                    alert("兑换失败");
 	                } else {
-	                	alert("请等待经理审核后登录");
-	                    window.location.href = path + "/venue/login.jsp";
+	                	alert("兑换成功");
+	                    window.location.href = path + "/user/commuteCoupon.jsp?id=" + id;
 	                }
 	            },
 	            error: function() {
-	            	alert("修改场馆信息失败");
+	            	alert("兑换失败");
 	            }
 	        });
 	    }
-    
+	    
     </script>
     
 </body>
