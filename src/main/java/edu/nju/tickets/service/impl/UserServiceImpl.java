@@ -11,8 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.nju.tickets.mapper.CouponMapper;
+import edu.nju.tickets.mapper.OrderMapper;
+import edu.nju.tickets.mapper.ShowMapper;
 import edu.nju.tickets.mapper.UserMapper;
 import edu.nju.tickets.pojo.Coupon;
+import edu.nju.tickets.pojo.Order;
+import edu.nju.tickets.pojo.Seat;
+import edu.nju.tickets.pojo.Show;
 import edu.nju.tickets.pojo.User;
 import edu.nju.tickets.service.UserService;
 import edu.nju.tickets.util.MailUtil;  
@@ -23,7 +28,11 @@ public class UserServiceImpl implements UserService {
     @Resource  
     private UserMapper userMapper;
     @Resource  
-    private CouponMapper couponMapper;  
+    private CouponMapper couponMapper;
+    @Resource  
+    private ShowMapper showMapper;
+    @Resource  
+    private OrderMapper orderMapper;
 
 	@Override
 	public int register(User user) throws UnsupportedEncodingException, MessagingException {
@@ -87,6 +96,61 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<Coupon> getCoupons(int userid) {
 		return couponMapper.getCoupons(userid);
+	}
+
+	@Override
+	public List<Show> getShows() {
+		return showMapper.getUserShows();
+	}
+
+	@Override
+	public List<Seat> getSeats(int showid) {
+		return showMapper.getSeats(showid);
+	}
+
+	@Transactional(rollbackFor=Exception.class)
+	@Override
+	public int addBuyTicket(int userid, int showid, int couponid, String seat, int amount, int price) {
+		int beforeNum = showMapper.getAmountByShowidAndSeat(showid, seat);
+		int sell = showMapper.updateSeatByShowidAndSeat(showid, seat, amount);
+		int order = 0;
+		int coupon = 1;
+		if(couponid != 0) {
+			coupon = couponMapper.updateCouponState(couponid);
+			order = orderMapper.addOrder(userid, showid, couponid, seat, amount, price);
+		} else {
+			order = orderMapper.addOrderwithoutCoupon(userid, showid, couponid, seat, amount, price);
+		}
+		if(beforeNum == 0) {
+			throw new RuntimeSqlException("没有足够余票");
+		}
+		if(sell == 1 && order == 1 && coupon ==1) {
+			return 1;
+		}
+		return 0;
+	}
+
+	@Override
+	public List<Order> getUnpayedOrders(int id, int showid) {
+		return orderMapper.getUnpayedOrders(id, showid);
+	}
+
+	@Override
+	public int payTicket(int userid, int orderid, int orderPrice) {
+		int userMoney = userMapper.getUserMoney(userid);
+		if(userMoney < orderPrice) {
+			return -1;
+		}
+		int user = userMapper.updateMoney(userid, userMoney-orderPrice);
+		if(user != 1) {
+			throw new RuntimeSqlException("更新用户余额失败");
+		}
+		int order = orderMapper.updateOrderPay(orderid);
+		if(order == 1) {
+			return 1;
+		} else {
+			throw new RuntimeSqlException("更新订单失败");
+		}
 	}
   
 } 

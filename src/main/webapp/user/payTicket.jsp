@@ -1,27 +1,26 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <%
     String path = request.getContextPath();
-    String id = request.getParameter("id");
+	String id = request.getParameter("id");
+	String showid = request.getParameter("showid");
 %>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<!-- Tell the browser to be responsive to screen width -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="author" content="">
-<title>会员主页</title>
-
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>支付</title>
+    
 <script type="text/javascript">
 	var path = "<%=path%>";
 	var id = "<%=id%>";
+	var showid = "<%=showid%>";
 </script>
 
-<style type="text/css">
-
-</style>
 <!-- Custom CSS -->
 <link rel="stylesheet" type="text/css" href="<%=path%>/dist/css/style.min.css" />
 
@@ -79,12 +78,6 @@
                             <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="<%=path%>/dist/images/venue-main.jpg" alt="user" class="img-circle" width="30"></a>
                             <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
                                 <span class="with-arrow"><span class="bg-primary"></span></span>
-                                <!-- <div class="d-flex no-block align-items-center p-15 bg-primary text-white m-b-10">
-                                    <div class=""><img src="<%=path%>/dist/images/venue-main.jpg" alt="user" class="img-circle" width="60"></div>
-                                    <div class="m-l-10">
-                                        <h4 class="m-b-0" id="venueName">场馆名</h4>
-                                    </div>
-                                </div> -->
                                 <a class="dropdown-item" href="<%=path%>/user/userInfo.jsp?id=<%=id%>">查看个人信息</a>
                                 <a class="dropdown-item" href="<%=path%>/user/bookShow.jsp?id=<%=id%>">演出预定</a>
                                 <a class="dropdown-item" href="<%=path%>/user/cancelShow.jsp?id=<%=id%>">演出退订</a>
@@ -106,95 +99,45 @@
         <!-- Page wrapper  -->
         <!-- ============================================================== -->
         <div class="page-wrapper">
-            <!-- ============================================================== -->
-            <!-- Container fluid  -->
-            <!-- ============================================================== -->
-            <div class="container-fluid">
-                <!-- ============================================================== -->
-                <!-- Bread crumb and right sidebar toggle -->
-                <!-- ============================================================== -->
+        	<div class="container-fluid">
                 <div class="row page-titles">
                     <div class="col-md-5 align-self-center">
-                        <h4 class="text-themecolor">会员主页</h4>
+                        <h4 class="text-themecolor">支付</h4>
                     </div>
                     <div class="col-md-7 align-self-center text-right">
                         <div class="d-flex justify-content-end align-items-center">
-                        <button type="button" class="btn btn-info d-none d-lg-block m-l-15" id="showUserInfoButton">查看个人信息</button>
                         </div>
                     </div>
                 </div>
-                <!-- ============================================================== -->
-                <!-- End Bread crumb and right sidebar toggle -->
-                <!-- ============================================================== -->
-                <!-- ============================================================== -->
-                <!-- Start Page Content -->
-                <!-- ============================================================== -->
-                <!-- Row -->
                 <div class="row">
-                    <div class="col-12">
-                        <!-- Row -->
-                        <div class="row">
-                            <!-- column -->
-                            <div class="col-lg-3 col-md-6">
-                                <!-- Card -->
-                                <div class="card">
-                                    <img class="card-img-top img-responsive" src="<%=path%>/dist/images/img1.jpg" alt="Card image cap">
-                                    <div class="card-body">
-                                        <a href="<%=path%>/user/bookShow.jsp?id=<%=id%>" class="btn btn-primary">演出预定</a>
-                                    </div>
+                    <!-- column -->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">订单信息</h4>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>id</th>
+                                                <th>演出</th>
+                                                <th>座位</th>
+                                                <th>数量</th>
+                                                <th>券后总价</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="orderTable">
+                                        
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <!-- Card -->
                             </div>
-                            <!-- column -->
-                            <!-- column -->
-                            <div class="col-lg-3 col-md-6">
-                                <!-- Card -->
-                                <div class="card">
-                                    <img class="card-img-top img-responsive" src="<%=path%>/dist/images/img2.jpg" alt="Card image cap">
-                                    <div class="card-body">
-                                        <a href="<%=path%>/user/userInfo.jsp?id=<%=id%>" class="btn btn-primary">查看个人信息</a>
-                                    </div>
-                                </div>
-                                <!-- Card -->
-                            </div>
-                            <!-- column -->
-                            <!-- column -->
-                            <div class="col-lg-3 col-md-6 img-responsive">
-                                <!-- Card -->
-                                <div class="card">
-                                    <img class="card-img-top img-responsive" src="<%=path%>/dist/images/img3.jpg" alt="Card image cap">
-                                    <div class="card-body">
-                                        <a href="<%=path%>/user/showOrderState.jsp?id=<%=id%>" class="btn btn-primary">查看订单状态</a>
-                                    </div>
-                                </div>
-                                <!-- Card -->
-                            </div>
-                            <!-- column -->
-                            <!-- column -->
-                            <div class="col-lg-3 col-md-6">
-                                <!-- Card -->
-                                <div class="card">
-                                    <img class="card-img-top img-responsive" src="<%=path%>/dist/images/img4.jpg" alt="Card image cap">
-                                    <div class="card-body">
-                                        <a href="<%=path%>/user/showStatistics.jsp?id=<%=id%>" class="btn btn-primary">查看个人统计信息</a>
-                                    </div>
-                                </div>
-                                <!-- Card -->
-                            </div>
-                            <!-- column -->
                         </div>
-                        <!-- Row -->
                     </div>
                 </div>
-                <!-- End Row -->
-                <!-- ============================================================== -->
-                <!-- End PAge Content -->
-                <!-- ============================================================== -->
-                <!-- ============================================================== -->
             </div>
-            <!-- ============================================================== -->
-            <!-- End Container fluid  -->
-            <!-- ============================================================== -->
+        
         </div>
         <!-- ============================================================== -->
         <!-- End Page wrapper  -->
@@ -231,9 +174,71 @@
     
     <script type="text/javascript">
 	    
-	    $(document).on("click","#showUserInfoButton",function(){
-	    	window.location.href = path + "/user/userInfo.jsp?id=" + id;
-	    })
+    $(function() {
+    	$.ajax({
+            type: "POST",
+            url: path + "/user/getUnpayedOrders.action",
+            data: {"id":id,
+            	"showid":showid
+            	},
+            dataType: "json",
+            success: function (backData) {
+                setOrderInfo(backData);
+            },
+            error: function() {
+            	alert("获取订单信息失败");
+            }
+        });
+    })
+    
+    function setOrderInfo(orders) {
+    	$("#orderTable").html("");
+        var html = "";
+        for(var i = 0;i<orders.length;i++){
+        	var item = orders[i];
+        	html += "<tr>";
+        	html += "<td>" + item.id + "</td>";
+        	html += "<td>" + item.show.name + "</td>";
+        	html += "<td>" + item.seat + "</td>";
+        	html += "<td>" + item.amount + "</td>";
+        	html += "<td>" + item.price + "</td>";
+        	html += "<td><button type='button' class='label label-danger payButton'>支付</button></td>";
+        	html += "</tr>";
+        }
+        $("#orderTable").html(html);
+    }
+    
+    $(document).on("click",".payButton",function(){
+    	var tr = $(this).closest("tr");
+    	var orderid = tr.find("td:eq(0)").text();
+    	var orderprice = tr.find("td:eq(4)").text();
+    	
+    	
+    	$.ajax({
+            type: "POST",
+            url: path + "/user/payTicket.action",
+            data: {"userid":id,
+            	"orderid":orderid,
+            	"orderPrice":orderprice
+            	},
+            dataType: "json",
+            success: function (backData) {
+            	if (backData == -1) {
+                    alert("账户余额不足");
+                } else if (backData == 0) {
+                	alert("订单已超时15分钟未支付失效");
+                } else if (backData == 1) {
+                	alert("支付成功");
+                	window.location.href = path + "/user/index.jsp?id=" + id;
+                } else {
+                	alert("不可能的错误");
+                }
+            },
+            error: function() {
+            	alert("服务器错误");
+            }
+        });
+    })
     
     </script>
     

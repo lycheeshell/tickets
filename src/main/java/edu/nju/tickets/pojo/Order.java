@@ -15,6 +15,12 @@ public class Order {
 	private Timestamp paytime;
 	private int state;  //1：未使用；  2：已使用；  3：已退款；  4：未付款；  5：已失效
 	
+	@Override
+	public String toString() {
+		return "Order [id=" + id + ", seat=" + seat + ", amount=" + amount + ", price=" + price + ", starttime="
+				+ starttime + ", paytime=" + paytime + ", state=" + state + "]";
+	}
+	
 	public int getId() {
 		return id;
 	}

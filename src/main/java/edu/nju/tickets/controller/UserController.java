@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.nju.tickets.pojo.Coupon;
+import edu.nju.tickets.pojo.Order;
+import edu.nju.tickets.pojo.Seat;
+import edu.nju.tickets.pojo.Show;
 import edu.nju.tickets.pojo.User;
 import edu.nju.tickets.service.UserService;
 
@@ -129,6 +133,83 @@ public class UserController {
     	List<Coupon> list = userService.getCoupons(id);
     	System.out.println(list);
         return list;
+    }
+    
+    /**获取在售演出
+     * 
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/getShows.action", method=RequestMethod.POST)
+    public List<Show> getShows() {
+    	List<Show> list = userService.getShows();
+    	System.out.println(list);
+        return list;
+    }
+    
+    /**获取演出的剩余座位
+     * 
+     * @param showid
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/getSeats.action", method=RequestMethod.POST)
+    public List<Seat> getSeats(int showid) {
+    	List<Seat> list = userService.getSeats(showid);
+    	System.out.println(list);
+        return list;
+    }
+    
+    /**预订演出票（未支付）
+     * 
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/buyTicket.action",method=RequestMethod.POST)
+    public int buyTicket(HttpServletRequest request){
+    	int userid = Integer.parseInt(request.getParameter("userid"));
+    	int showid = Integer.parseInt(request.getParameter("showid"));
+    	int couponid = 0;
+    	if(request.getParameter("couponid") == null || request.getParameter("couponid").equals("")) {
+    		couponid = 0;
+    	} else {
+    		couponid = Integer.parseInt(request.getParameter("couponid"));
+    	}
+    	String seat = request.getParameter("seat");
+        int amount = Integer.parseInt(request.getParameter("amount"));
+        int price = Integer.parseInt(request.getParameter("price"));
+        
+    	return userService.addBuyTicket(userid, showid, couponid, seat, amount, price);
+    }
+    
+    /**获取未支付订单
+     * 
+     * @param id
+     * @param showid
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/getUnpayedOrders.action", method=RequestMethod.POST)
+    public List<Order> getUnpayedOrders(int id, int showid) {
+    	List<Order> list = userService.getUnpayedOrders(id, showid);
+    	System.out.println(list);
+        return list;
+    }
+    
+    /**支付演出票
+     * 
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/payTicket.action",method=RequestMethod.POST)
+    public int payTicket(HttpServletRequest request){
+    	int userid = Integer.parseInt(request.getParameter("userid"));
+    	int orderid = Integer.parseInt(request.getParameter("orderid"));
+        int orderPrice = Integer.parseInt(request.getParameter("orderPrice"));
+        
+    	return userService.payTicket(userid, orderid, orderPrice);
     }
     
 }  

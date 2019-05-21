@@ -1,19 +1,19 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <%
     String path = request.getContextPath();
-    String id = request.getParameter("id");
+	String id = request.getParameter("id");
 %>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<!-- Tell the browser to be responsive to screen width -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="author" content="">
-<title>会员主页</title>
-
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>现场售票</title>
+    
 <script type="text/javascript">
 	var path = "<%=path%>";
 	var id = "<%=id%>";
@@ -106,95 +106,28 @@
         <!-- Page wrapper  -->
         <!-- ============================================================== -->
         <div class="page-wrapper">
-            <!-- ============================================================== -->
-            <!-- Container fluid  -->
-            <!-- ============================================================== -->
-            <div class="container-fluid">
-                <!-- ============================================================== -->
-                <!-- Bread crumb and right sidebar toggle -->
-                <!-- ============================================================== -->
-                <div class="row page-titles">
+        	<div class="container-fluid">
+        		<div class="row page-titles">
                     <div class="col-md-5 align-self-center">
-                        <h4 class="text-themecolor">会员主页</h4>
+                        <h4 class="text-themecolor">在售演出</h4>
                     </div>
                     <div class="col-md-7 align-self-center text-right">
                         <div class="d-flex justify-content-end align-items-center">
-                        <button type="button" class="btn btn-info d-none d-lg-block m-l-15" id="showUserInfoButton">查看个人信息</button>
                         </div>
                     </div>
                 </div>
-                <!-- ============================================================== -->
-                <!-- End Bread crumb and right sidebar toggle -->
-                <!-- ============================================================== -->
-                <!-- ============================================================== -->
-                <!-- Start Page Content -->
-                <!-- ============================================================== -->
-                <!-- Row -->
+				<!-- Row -->
                 <div class="row">
                     <div class="col-12">
                         <!-- Row -->
-                        <div class="row">
-                            <!-- column -->
-                            <div class="col-lg-3 col-md-6">
-                                <!-- Card -->
-                                <div class="card">
-                                    <img class="card-img-top img-responsive" src="<%=path%>/dist/images/img1.jpg" alt="Card image cap">
-                                    <div class="card-body">
-                                        <a href="<%=path%>/user/bookShow.jsp?id=<%=id%>" class="btn btn-primary">演出预定</a>
-                                    </div>
-                                </div>
-                                <!-- Card -->
-                            </div>
-                            <!-- column -->
-                            <!-- column -->
-                            <div class="col-lg-3 col-md-6">
-                                <!-- Card -->
-                                <div class="card">
-                                    <img class="card-img-top img-responsive" src="<%=path%>/dist/images/img2.jpg" alt="Card image cap">
-                                    <div class="card-body">
-                                        <a href="<%=path%>/user/userInfo.jsp?id=<%=id%>" class="btn btn-primary">查看个人信息</a>
-                                    </div>
-                                </div>
-                                <!-- Card -->
-                            </div>
-                            <!-- column -->
-                            <!-- column -->
-                            <div class="col-lg-3 col-md-6 img-responsive">
-                                <!-- Card -->
-                                <div class="card">
-                                    <img class="card-img-top img-responsive" src="<%=path%>/dist/images/img3.jpg" alt="Card image cap">
-                                    <div class="card-body">
-                                        <a href="<%=path%>/user/showOrderState.jsp?id=<%=id%>" class="btn btn-primary">查看订单状态</a>
-                                    </div>
-                                </div>
-                                <!-- Card -->
-                            </div>
-                            <!-- column -->
-                            <!-- column -->
-                            <div class="col-lg-3 col-md-6">
-                                <!-- Card -->
-                                <div class="card">
-                                    <img class="card-img-top img-responsive" src="<%=path%>/dist/images/img4.jpg" alt="Card image cap">
-                                    <div class="card-body">
-                                        <a href="<%=path%>/user/showStatistics.jsp?id=<%=id%>" class="btn btn-primary">查看个人统计信息</a>
-                                    </div>
-                                </div>
-                                <!-- Card -->
-                            </div>
-                            <!-- column -->
+                        <div class="row" id="showDiv">
+                            
                         </div>
                         <!-- Row -->
                     </div>
                 </div>
-                <!-- End Row -->
-                <!-- ============================================================== -->
-                <!-- End PAge Content -->
-                <!-- ============================================================== -->
-                <!-- ============================================================== -->
-            </div>
-            <!-- ============================================================== -->
-            <!-- End Container fluid  -->
-            <!-- ============================================================== -->
+                <!-- End Row -->        		
+        	</div>
         </div>
         <!-- ============================================================== -->
         <!-- End Page wrapper  -->
@@ -230,10 +163,42 @@
     </script>
     
     <script type="text/javascript">
-	    
-	    $(document).on("click","#showUserInfoButton",function(){
-	    	window.location.href = path + "/user/userInfo.jsp?id=" + id;
-	    })
+    
+    $(function() {
+    	$.ajax({
+            type: "POST",
+            url: path + "/user/getShows.action",
+            dataType: "json",
+            success: function (backData) {
+                setShowInfo(backData);
+            },
+            error: function() {
+            	alert("获取演出信息失败");
+            }
+        });
+    })
+    
+    function setShowInfo(shows) {
+    	$("#showDiv").html("");
+        var html = "";
+        for(var i = 0;i<shows.length;i++){
+        	var item = shows[i];
+        	html += "<div class='col-lg-3 col-md-6'>";
+        	html += "<div class='card'>";
+        	
+        	var showName = item.name + "venue" + item.venue.id;
+        	html += "<img class='card-img-top img-responsive' src='" + path + "/dist/images/venue/" + showName + ".jpg' alt='Card image cap'>";
+        	
+        	html += "<div class='card-body'>";
+        	
+        	html += "<a href='" + path + "/user/buyTicket.jsp?id=" + id + "&showid=" + item.id + "' class='btn btn-primary'>" + item.name + "</a>";
+        	
+        	html += "</div>";
+        	html += "</div>";
+        	html += "</div>";
+        }
+        $("#showDiv").html(html);
+    }
     
     </script>
     

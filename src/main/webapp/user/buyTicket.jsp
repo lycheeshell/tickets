@@ -1,22 +1,24 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <%
     String path = request.getContextPath();
-    String id = request.getParameter("id");
+	String id = request.getParameter("id");
+	String showid = request.getParameter("showid");
 %>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<!-- Tell the browser to be responsive to screen width -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="author" content="">
-<title>会员主页</title>
-
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>预定演出票</title>
+    
 <script type="text/javascript">
 	var path = "<%=path%>";
 	var id = "<%=id%>";
+	var showid = "<%=showid%>";
 </script>
 
 <style type="text/css">
@@ -24,6 +26,7 @@
 </style>
 <!-- Custom CSS -->
 <link rel="stylesheet" type="text/css" href="<%=path%>/dist/css/style.min.css" />
+<link rel="stylesheet" type="text/css" href="<%=path%>/dist/css/bootstrap-select.min.css">
 
 </head>
 
@@ -106,95 +109,75 @@
         <!-- Page wrapper  -->
         <!-- ============================================================== -->
         <div class="page-wrapper">
-            <!-- ============================================================== -->
-            <!-- Container fluid  -->
-            <!-- ============================================================== -->
-            <div class="container-fluid">
-                <!-- ============================================================== -->
-                <!-- Bread crumb and right sidebar toggle -->
-                <!-- ============================================================== -->
+        
+        	<div class="container-fluid">
                 <div class="row page-titles">
                     <div class="col-md-5 align-self-center">
-                        <h4 class="text-themecolor">会员主页</h4>
+                        <h4 class="text-themecolor">售票</h4>
                     </div>
                     <div class="col-md-7 align-self-center text-right">
                         <div class="d-flex justify-content-end align-items-center">
-                        <button type="button" class="btn btn-info d-none d-lg-block m-l-15" id="showUserInfoButton">查看个人信息</button>
                         </div>
                     </div>
                 </div>
-                <!-- ============================================================== -->
-                <!-- End Bread crumb and right sidebar toggle -->
-                <!-- ============================================================== -->
-                <!-- ============================================================== -->
-                <!-- Start Page Content -->
-                <!-- ============================================================== -->
-                <!-- Row -->
                 <div class="row">
-                    <div class="col-12">
-                        <!-- Row -->
-                        <div class="row">
-                            <!-- column -->
-                            <div class="col-lg-3 col-md-6">
-                                <!-- Card -->
-                                <div class="card">
-                                    <img class="card-img-top img-responsive" src="<%=path%>/dist/images/img1.jpg" alt="Card image cap">
-                                    <div class="card-body">
-                                        <a href="<%=path%>/user/bookShow.jsp?id=<%=id%>" class="btn btn-primary">演出预定</a>
-                                    </div>
+                    <!-- column -->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">座位信息</h4>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>id</th>
+                                                <th>座位名称</th>
+                                                <th>座位数量</th>
+                                                <th>座位价格</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="seatTable">
+                                        
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <!-- Card -->
                             </div>
-                            <!-- column -->
-                            <!-- column -->
-                            <div class="col-lg-3 col-md-6">
-                                <!-- Card -->
-                                <div class="card">
-                                    <img class="card-img-top img-responsive" src="<%=path%>/dist/images/img2.jpg" alt="Card image cap">
-                                    <div class="card-body">
-                                        <a href="<%=path%>/user/userInfo.jsp?id=<%=id%>" class="btn btn-primary">查看个人信息</a>
-                                    </div>
-                                </div>
-                                <!-- Card -->
-                            </div>
-                            <!-- column -->
-                            <!-- column -->
-                            <div class="col-lg-3 col-md-6 img-responsive">
-                                <!-- Card -->
-                                <div class="card">
-                                    <img class="card-img-top img-responsive" src="<%=path%>/dist/images/img3.jpg" alt="Card image cap">
-                                    <div class="card-body">
-                                        <a href="<%=path%>/user/showOrderState.jsp?id=<%=id%>" class="btn btn-primary">查看订单状态</a>
-                                    </div>
-                                </div>
-                                <!-- Card -->
-                            </div>
-                            <!-- column -->
-                            <!-- column -->
-                            <div class="col-lg-3 col-md-6">
-                                <!-- Card -->
-                                <div class="card">
-                                    <img class="card-img-top img-responsive" src="<%=path%>/dist/images/img4.jpg" alt="Card image cap">
-                                    <div class="card-body">
-                                        <a href="<%=path%>/user/showStatistics.jsp?id=<%=id%>" class="btn btn-primary">查看个人统计信息</a>
-                                    </div>
-                                </div>
-                                <!-- Card -->
-                            </div>
-                            <!-- column -->
                         </div>
-                        <!-- Row -->
                     </div>
                 </div>
-                <!-- End Row -->
-                <!-- ============================================================== -->
-                <!-- End PAge Content -->
-                <!-- ============================================================== -->
-                <!-- ============================================================== -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card card-body">
+                            <h3 class="box-title m-b-0">购票信息</h3>
+                            <div class="row">
+                                <div class="col-sm-12 col-xs-12">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">购票张数</label><br/>
+                                            <select id="ticketNumberInput" class="selectpicker" data-style="form-control btn-secondary">
+	                                            <option>1</option>
+	                                            <option>2</option>
+	                                            <option>3</option>
+	                                            <option>4</option>
+	                                            <option>5</option>
+	                                            <option>6</option>
+                                        	</select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">我的优惠券</label><br/>
+                                            <select id="couponInput">
+	                                            
+                                        	</select>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- ============================================================== -->
-            <!-- End Container fluid  -->
-            <!-- ============================================================== -->
+        
         </div>
         <!-- ============================================================== -->
         <!-- End Page wrapper  -->
@@ -223,6 +206,8 @@
     <script src="<%=path%>/dist/js/waves.js"></script>
     <!--Custom JavaScript -->
     <script src="<%=path%>/dist/js/custom.min.js"></script>
+    <script src="<%=path%>/dist/js/bootstrap-select.min.js" type="text/javascript"></script>
+    
     <script type="text/javascript">
         $(function() {
             $(".preloader").fadeOut();
@@ -230,10 +215,104 @@
     </script>
     
     <script type="text/javascript">
-	    
-	    $(document).on("click","#showUserInfoButton",function(){
-	    	window.location.href = path + "/user/userInfo.jsp?id=" + id;
-	    })
+    
+    $(function() {
+    	$.ajax({
+            type: "POST",
+            url: path + "/user/getSeats.action",
+            data: {"showid":showid},
+            dataType: "json",
+            success: function (backData) {
+                setSeatInfo(backData);
+            },
+            error: function() {
+            	alert("获取座位信息失败");
+            }
+        });
+    })
+    
+    function setSeatInfo(seats) {
+    	$("#seatTable").html("");
+        var html = "";
+        for(var i = 0;i<seats.length;i++){
+        	var item = seats[i];
+        	html += "<tr>";
+        	html += "<td>" + item.id + "</td>";
+        	html += "<td>" + item.name + "</td>";
+        	html += "<td>" + item.amount + "</td>";
+        	html += "<td>" + item.price + "</td>";
+        	html += "<td><button type='button' class='label label-danger buyButton'>下单</button></td>";
+        	html += "</tr>";
+        }
+        $("#seatTable").html(html);
+    }
+    
+    $(function() {
+    	$.ajax({
+            type: "POST",
+            url: path + "/user/getCoupons.action",
+            data: {"id":id},
+            dataType: "json",
+            success: function (backData) {
+                setCouponInfo(backData);
+            },
+            error: function() {
+            	alert("获取优惠券信息失败");
+            }
+        });
+    })
+    
+    function setCouponInfo(coupons) {
+    	$("#couponInput").html("");
+        var html = "";
+        for(var i = 0;i<coupons.length;i++){
+        	var item = coupons[i];
+        	html += "<option id='" + item.id + "'>" + item.amount + "</option>";
+        }
+        $("#couponInput").html(html);
+    }
+    
+    $(document).on("click",".buyButton",function(){
+    	var tr = $(this).closest("tr");
+    	var seatName = tr.find("td:eq(1)").text();
+    	var seatAmount = tr.find("td:eq(3)").text();
+    	var couponid = "";
+    	var couponAmount = 0;
+    	var amount = $("#ticketNumberInput").find("option:selected").text();
+    	
+    	if("" != $("#couponInput").find("option:selected").attr("id")) {
+    		couponid = $("#couponInput").find("option:selected").attr("id");
+    		couponAmount = $("#couponInput").find("option:selected").text();
+    	}
+    	
+    	var price = seatAmount * amount - couponAmount;
+    	
+    	$.ajax({
+            type: "POST",
+            url: path + "/user/buyTicket.action",
+            data: {"userid":id,
+            	"showid":showid,
+            	"couponid":couponid,
+            	"seat":seatName,
+            	"amount":amount,
+            	"price":price
+            	},
+            dataType: "json",
+            success: function (backData) {
+            	if (backData == 0) {
+                    alert("余票不足");
+                } else if (backData == 1) {
+                	alert("预订 " + seatName + " " + amount + " 张");
+                	window.location.href = path + "/user/payTicket.jsp?id=" + id + "&showid=" + showid;
+                } else {
+                	alert("不可能的错误");
+                }
+            },
+            error: function() {
+            	alert("服务器错误");
+            }
+        });
+    })
     
     </script>
     

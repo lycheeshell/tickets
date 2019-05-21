@@ -8,6 +8,7 @@ public class Coupon {
 	private User user;
 	private int amount;
 	private Timestamp endtime;
+	private int state;    // 1：未使用；  0：已使用
 	
 	@Override
 	public String toString() {
@@ -37,6 +38,12 @@ public class Coupon {
 	}
 	public void setEndtime(Timestamp endtime) {
 		this.endtime = endtime;
+	}
+	public int getState() {
+		return state;
+	}
+	public void setState(int state) {
+		this.state = state;
 	}
 	
 }

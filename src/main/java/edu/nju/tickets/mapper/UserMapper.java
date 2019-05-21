@@ -43,6 +43,12 @@ public interface UserMapper {
 
 	@Update("update t_user set score=score-#{1}*100 where id=#{0}")
 	public int updateUserScore(int id, int coupon);
+
+	@Select("select money from t_user where id=#{0}")
+	public int getUserMoney(int userid);
+
+	@Update("update t_user set money=#{1} where id=#{0}")
+	public int updateMoney(int userid, int newMoney);
 	
 	
 	
