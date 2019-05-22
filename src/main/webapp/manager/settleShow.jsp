@@ -1,6 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <%
     String path = request.getContextPath();
+	String showid = request.getParameter("showid");
 %>
 <!DOCTYPE html>
 <html>
@@ -15,6 +16,7 @@
     
     <script type="text/javascript">
     	var path = "<%=path%>";	
+    	var showid = "<%=showid%>";
 	</script>
     
     <!-- Custom CSS -->
@@ -75,12 +77,31 @@
                 </div>
                 <!-- Row -->
                 <div class="row">
-                    <div class="col-12">
-                        <!-- Row -->
-                        <div class="row" id="showDiv">
-                            
+                    <div class="col-md-6">
+                        <div class="card card-body">
+                            <h3 class="box-title m-b-0">结算</h3>
+                            <div class="row">
+                                <div class="col-sm-12 col-xs-12">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">演出名称</label>
+                                            <input type="text" class="form-control" id="nameInput">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">总费用的80%</label>
+                                            <input type="text" class="form-control" id="moneyInput">
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="checkbox checkbox-success">
+                                                <input id="checkbox1" type="checkbox">
+                                                <label for="checkbox1">确认结算,商家可得80% ！</label>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-success waves-effect waves-light m-r-10" onclick="settleShow();return false;">提交</button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
-                        <!-- Row -->
                     </div>
                 </div>
                 
@@ -116,39 +137,56 @@
     <script type="text/javascript">
     
     $(function() {
-    	$.ajax({
+        //进入页面时加载信息
+        var nameInput = $("#nameInput");
+        var moneyInput = $("#moneyInput");
+        
+        $.ajax({
             type: "POST",
-            url: path + "/manager/getShows.action",
+            url: path + "/manager/getMoneyInfo.action",
+            data: {"showid":showid},
             dataType: "json",
             success: function (backData) {
-                setShowInfo(backData);
+            	nameInput.val(backData.name);
+            	nameInput.attr("readonly","readonly");
+    	        moneyInput.val(backData.money*0.8);
+    	        moneyInput.attr("readonly","readonly");
             },
             error: function() {
             	alert("获取演出信息失败");
             }
         });
-    })
+    });
     
-    function setShowInfo(shows) {
-    	$("#showDiv").html("");
-        var html = "";
-        for(var i = 0;i<shows.length;i++){
-        	var item = shows[i];
-        	html += "<div class='col-lg-3 col-md-6'>";
-        	html += "<div class='card'>";
-        	
-        	var showName = item.name + "venue" + item.venue.id;
-        	html += "<img class='card-img-top img-responsive' src='" + path + "/dist/images/venue/" + showName + ".jpg' alt='Card image cap'>";
-        	
-        	html += "<div class='card-body'>";
-        	
-        	html += "<a href='" + path + "/manager/settleShow.jsp?showid=" + item.id + "' class='btn btn-primary'>" + item.name + "</a>";
-        	
-        	html += "</div>";
-        	html += "</div>";
-        	html += "</div>";
-        }
-        $("#showDiv").html(html);
+    function settleShow(){
+    	var allow = $("#checkbox1").is(":checked");
+    	if(allow == false) {
+    		alert("请接收协议");
+    		return;
+    	}
+    	
+        var money = $("#moneyInput").val();
+    	
+    	$.ajax({
+            type: "POST",
+            url: path + "/manager/settleShow.action",
+            data: {"showid":showid,
+            	"money":money
+            },
+            dataType: "json",
+            success: function (backData) {
+                if (backData == 0) {
+                    alert("结算失败");
+                } else {
+                	alert("结算成功");
+                    window.location.href = path + "/manager/index.jsp";
+                }
+            },
+            error: function() {
+            	alert("服务器结算失败");
+            }
+        });
+    	
     }
     
     </script>

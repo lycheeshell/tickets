@@ -26,4 +26,7 @@ public interface VenueMapper {
 	@Select("select seat from t_venue where id=#{0}")
 	public int getSeatNum(int venueid);
 
+	@Update("update t_venue set money=money+#{1} where id=(select venue_id from t_show where id=#{0})")
+	public int settleShow(int showid, int money);
+
 }

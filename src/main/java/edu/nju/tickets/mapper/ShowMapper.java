@@ -75,4 +75,18 @@ public interface ShowMapper {
 	@Select("select * from t_show where id=#{0}")
 	public Show getShowById(int id);
 
+	@Results(value={
+			@Result(id=true,property="id",column="id"),
+			@Result(property="venue",column="venue_id", one=@One(select ="edu.nju.tickets.mapper.VenueMapper.getVenueInfo")),
+			@Result(property="name",column="name"),
+	    	@Result(property="endtime",column="endtime", jdbcType=JdbcType.TIMESTAMP),
+	    	@Result(property="type",column="type"),
+	    	@Result(property="description",column="description")
+	    	})
+	@Select("select * from t_show where showtime<now()")
+	public List<Show> getFinishedShows();
+
+	@Select("select name from t_show where id=#{0}")
+	public String getNameById(int showid);
+
 }

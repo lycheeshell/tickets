@@ -63,4 +63,7 @@ public interface OrderMapper {
 	@Update("update t_order set state=2 where id=#{0} and state=1")
 	public int checkTicket(int orderid);
 
+	@Select("select ifnull(sum(price),0) from t_order where show_id=#{0} and state=2")
+	public int getTotalMoney(int showid);
+
 }

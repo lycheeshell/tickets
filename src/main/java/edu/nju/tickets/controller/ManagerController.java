@@ -1,6 +1,7 @@
 package edu.nju.tickets.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.nju.tickets.pojo.Manager;
+import edu.nju.tickets.pojo.Show;
 import edu.nju.tickets.pojo.Venue;
 import edu.nju.tickets.service.ManagerService;
 
@@ -74,6 +76,41 @@ public class ManagerController {
     @RequestMapping(value="/deleteVenue.action", method=RequestMethod.POST)
     public int deleteVenue(int id) {
         return managerService.deleteVenue(id);
+    }
+    
+    /**获取场馆的演出
+     * 
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/getShows.action", method=RequestMethod.POST)
+    public List<Show> getShows() {
+    	List<Show> list = managerService.getShows();
+    	System.out.println(list);
+        return list;
+    }
+    
+    /**获取结算金额
+     * 
+     * @param showid
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/getMoneyInfo.action", method=RequestMethod.POST)
+    public Map<String, String> getMoneyInfo(int showid) {
+        return managerService.getMoneyInfo(showid);
+    }
+    
+    /**结算
+     * 
+     * @param showid
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/settleShow.action", method=RequestMethod.POST)
+    public int settleShow(int showid, int money) {
+        return managerService.settleShow(showid, money);
     }
 	
 }
