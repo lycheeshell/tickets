@@ -40,5 +40,9 @@ public interface UserService {
 	public List<Order> getUnpayedOrders(int id, int showid);
 
 	public int payTicket(int userid, int orderid, int orderPrice);
+
+	public List<Order> getUserAllOrders(int id);
+
+	public int refundTicket(int userid, int orderid, int orderPrice);
 	
 }  

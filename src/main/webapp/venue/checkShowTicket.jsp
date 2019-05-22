@@ -3,6 +3,7 @@
     String path = request.getContextPath();
 	String id = request.getParameter("id");
 	String name = request.getParameter("name");
+	String showid = request.getParameter("showid");
 %>
 <!DOCTYPE html>
 <html>
@@ -19,6 +20,7 @@
 	var path = "<%=path%>";
 	var id = "<%=id%>";
 	var name = "<%=name%>";
+	var showid = "<%=showid%>";
 </script>
 
 <style type="text/css">
@@ -108,28 +110,63 @@
         <!-- Page wrapper  -->
         <!-- ============================================================== -->
         <div class="page-wrapper">
+        
         	<div class="container-fluid">
-        		<div class="row page-titles">
+                <div class="row page-titles">
                     <div class="col-md-5 align-self-center">
-                        <h4 class="text-themecolor">演出场次</h4>
+                        <h4 class="text-themecolor">检票</h4>
                     </div>
                     <div class="col-md-7 align-self-center text-right">
                         <div class="d-flex justify-content-end align-items-center">
                         </div>
                     </div>
                 </div>
-				<!-- Row -->
                 <div class="row">
-                    <div class="col-12">
-                        <!-- Row -->
-                        <div class="row" id="showDiv">
-                            
+                    <div class="col-md-6">
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-12 col-xs-12">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">用户账号</label>
+                                            <input type="text" class="form-control" id="accountInput" placeholder="请输入用户账户">
+                                        </div>
+                                        <button type="submit" class="btn btn-success waves-effect waves-light m-r-10" onclick="modifyOrderTable();return false;">查询</button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
-                        <!-- Row -->
                     </div>
                 </div>
-                <!-- End Row -->        		
-        	</div>
+                <div class="row">
+                    <!-- column -->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">订单信息</h4>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>id</th>
+                                                <th>演出</th>
+                                                <th>座位</th>
+                                                <th>数量</th>
+                                                <th>券后总价</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="orderTable">
+                                        
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
         </div>
         <!-- ============================================================== -->
         <!-- End Page wrapper  -->
@@ -178,42 +215,75 @@
     
     <script type="text/javascript">
     
-    $(function() {
+    function modifyOrderTable(){
+    	
+    	var userAccount = $("#accountInput").val();
+    	if (userAccount == "") {
+            alert("账号不能为空");
+            return;
+        }
+    	
     	$.ajax({
             type: "POST",
-            url: path + "/venue/getShows.action",
-            data: {"id":id},
+            url: path + "/venue/getShowOrdersByUser.action",
+            data: {"userAccount":userAccount,
+            	"showid":showid
+            	},
             dataType: "json",
             success: function (backData) {
-                setShowInfo(backData);
+                setOrderInfo(backData);
             },
             error: function() {
-            	alert("获取演出信息失败");
+            	alert("获取订单信息失败");
+            }
+        });
+    }
+    
+    function setOrderInfo(orders) {
+    	$("#orderTable").html("");
+        var html = "";
+        for(var i = 0;i<orders.length;i++){
+        	var item = orders[i];
+        	html += "<tr>";
+        	html += "<td>" + item.id + "</td>";
+        	html += "<td>" + item.show.name + "</td>";
+        	html += "<td>" + item.seat + "</td>";
+        	html += "<td>" + item.amount + "</td>";
+        	html += "<td>" + item.price + "</td>";
+        	html += "<td><button type='button' class='label label-danger checkButton'>检票</button></td>";
+        	html += "</tr>";
+        }
+        $("#orderTable").html(html);
+    }
+    
+    $(document).on("click",".checkButton",function(){
+    	var tr = $(this).closest("tr");
+    	var orderid = tr.find("td:eq(0)").text();
+    	var orderprice = tr.find("td:eq(4)").text();
+    	
+    	
+    	$.ajax({
+            type: "POST",
+            url: path + "/venue/checkTicket.action",
+            data: {"orderid":orderid},
+            dataType: "json",
+            success: function (backData) {
+            	if (backData == -1) {
+                    alert("不知道啥错误");
+                } else if (backData == 0) {
+                	alert("该订单不存在");
+                } else if (backData == 1) {
+                	alert("检票成功");
+                	window.location.href = path + "/venue/checkShowTicket.jsp?id=" + id + "&name=" + name + "&showid=" + showid;
+                } else {
+                	alert("不可能的错误");
+                }
+            },
+            error: function() {
+            	alert("服务器错误");
             }
         });
     })
-    
-    function setShowInfo(shows) {
-    	$("#showDiv").html("");
-        var html = "";
-        for(var i = 0;i<shows.length;i++){
-        	var item = shows[i];
-        	html += "<div class='col-lg-3 col-md-6'>";
-        	html += "<div class='card'>";
-        	
-        	var showName = item.name + "venue" + id;
-        	html += "<img class='card-img-top img-responsive' src='" + path + "/dist/images/venue/" + showName + ".jpg' alt='Card image cap'>";
-        	
-        	html += "<div class='card-body'>";
-        	
-        	html += "<a href='" + path + "/venue/checkShowTicket.jsp?id=" + id + "&name=" + name + "&showid=" + item.id + "' class='btn btn-primary'>" + item.name + "</a>";
-        	
-        	html += "</div>";
-        	html += "</div>";
-        	html += "</div>";
-        }
-        $("#showDiv").html(html);
-    }
     
     </script>
     

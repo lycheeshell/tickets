@@ -212,4 +212,33 @@ public class UserController {
     	return userService.payTicket(userid, orderid, orderPrice);
     }
     
+    /**获取用户所有的订单
+     * 
+     * @param id
+     * @param showid
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/getUserAllOrders.action", method=RequestMethod.POST)
+    public List<Order> getUserAllOrders(int id) {
+    	List<Order> list = userService.getUserAllOrders(id);
+    	System.out.println(list);
+        return list;
+    }
+    
+    /**退演出票
+     * 
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/refundTicket.action",method=RequestMethod.POST)
+    public int refundTicket(HttpServletRequest request){
+    	int userid = Integer.parseInt(request.getParameter("userid"));
+    	int orderid = Integer.parseInt(request.getParameter("orderid"));
+        int orderPrice = Integer.parseInt(request.getParameter("orderPrice"));
+        
+    	return userService.refundTicket(userid, orderid, orderPrice);
+    }
+    
 }  

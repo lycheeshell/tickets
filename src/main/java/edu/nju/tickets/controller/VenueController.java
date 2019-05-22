@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import edu.nju.tickets.pojo.Order;
 import edu.nju.tickets.pojo.Seat;
 import edu.nju.tickets.pojo.Show;
 import edu.nju.tickets.pojo.Venue;
@@ -188,6 +189,31 @@ public class VenueController {
     @RequestMapping(value="/sellTicket.action", method=RequestMethod.POST)
     public int sellTicket(int seatid) {
         return venueService.sellTicket(seatid);
+    }
+    
+    /**获取用户该演出的订单
+     * 
+     * @param id
+     * @param showid
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/getShowOrdersByUser.action", method=RequestMethod.POST)
+    public List<Order> getShowOrdersByUser(String userAccount, int showid) {
+    	List<Order> list = venueService.getShowOrdersByUser(userAccount, showid);
+    	System.out.println(list);
+        return list;
+    }
+    
+    /**检票
+     * 
+     * @param orderid
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="/checkTicket.action", method=RequestMethod.POST)
+    public int checkTicket(int orderid) {
+        return venueService.checkTicket(orderid);
     }
 	
 }

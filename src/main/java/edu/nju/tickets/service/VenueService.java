@@ -2,6 +2,7 @@ package edu.nju.tickets.service;
 
 import java.util.List;
 
+import edu.nju.tickets.pojo.Order;
 import edu.nju.tickets.pojo.Seat;
 import edu.nju.tickets.pojo.Show;
 import edu.nju.tickets.pojo.Venue;
@@ -25,5 +26,9 @@ public interface VenueService {
 	public List<Seat> getSeats(int showid);
 
 	public int sellTicket(int seatid);
+
+	public List<Order> getShowOrdersByUser(String userAccount, int showid);
+
+	public int checkTicket(int orderid);
 	
 }  

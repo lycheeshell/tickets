@@ -47,20 +47,12 @@ public interface UserMapper {
 	@Select("select money from t_user where id=#{0}")
 	public int getUserMoney(int userid);
 
-	@Update("update t_user set money=#{1} where id=#{0}")
-	public int updateMoney(int userid, int newMoney);
+	@Update("update t_user set money=money-#{1}, level=#{2}, score=score+#{1} where id=#{0}")
+	public int updateByPay(int userid, int orderPrice, int level);
+	
+	@Update("update t_user set money=money+#{1}, level=#{2}, score=score-#{1} where id=#{0}")
+	public int updateByRefund(int userid, int orderPrice, int level);
 	
 	
 	
-	
-	
-//    @Results(value={
-//    		@Result(id=true,property="id",column="id"),
-//    		@Result(property="account",column="user_name"),
-//    		@Result(property="password",column="password"),
-//    		@Result(property="age",column="age")
-//    		})
-//    @Select("select * from user_t where id=#{0}")
-//    public User selectByPrimaryKey(int id);
-
 }

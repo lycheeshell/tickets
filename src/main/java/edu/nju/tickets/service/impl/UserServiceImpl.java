@@ -135,21 +135,73 @@ public class UserServiceImpl implements UserService {
 		return orderMapper.getUnpayedOrders(id, showid);
 	}
 
+	@Transactional(rollbackFor=Exception.class)
 	@Override
 	public int payTicket(int userid, int orderid, int orderPrice) {
 		int userMoney = userMapper.getUserMoney(userid);
 		if(userMoney < orderPrice) {
 			return -1;
 		}
-		int user = userMapper.updateMoney(userid, userMoney-orderPrice);
+		int order = orderMapper.updateOrderPay(orderid);
+		if(order != 1) {
+			throw new RuntimeSqlException("更新订单失败");
+		}
+		int allMoney = orderMapper.getAllMoneyByUser(userid);
+		allMoney = allMoney + orderPrice;
+		
+		int level = 0;
+		if(allMoney < 500) { 
+			level = 1;
+		} else if(allMoney < 1000) {
+			level = 2;
+		} else if(allMoney < 2000) {
+			level = 3;
+		} else if(allMoney < 5000) {
+			level = 4;
+		} else if(allMoney < 10000) {
+			level = 5;
+		}
+		
+		int user = userMapper.updateByPay(userid, orderPrice, level);
 		if(user != 1) {
 			throw new RuntimeSqlException("更新用户余额失败");
-		}
-		int order = orderMapper.updateOrderPay(orderid);
-		if(order == 1) {
-			return 1;
 		} else {
+			return 1;
+		}
+	}
+
+	@Override
+	public List<Order> getUserAllOrders(int id) {
+		return orderMapper.getUserAllOrders(id);
+	}
+
+	@Transactional(rollbackFor=Exception.class)
+	@Override
+	public int refundTicket(int userid, int orderid, int orderPrice) {
+		int order = orderMapper.updateOrderRefund(orderid);
+		if(order != 1) {
 			throw new RuntimeSqlException("更新订单失败");
+		}
+		int allMoney = orderMapper.getAllMoneyByUser(userid);
+		
+		int level = 0;
+		if(allMoney < 500) { 
+			level = 1;
+		} else if(allMoney < 1000) {
+			level = 2;
+		} else if(allMoney < 2000) {
+			level = 3;
+		} else if(allMoney < 5000) {
+			level = 4;
+		} else if(allMoney < 10000) {
+			level = 5;
+		}
+		
+		int user = userMapper.updateByRefund(userid, orderPrice, level);
+		if(user != 1) {
+			throw new RuntimeSqlException("更新用户余额失败");
+		} else {
+			return 1;
 		}
 	}
   

@@ -7,8 +7,10 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import edu.nju.tickets.mapper.OrderMapper;
 import edu.nju.tickets.mapper.ShowMapper;
 import edu.nju.tickets.mapper.VenueMapper;
+import edu.nju.tickets.pojo.Order;
 import edu.nju.tickets.pojo.Seat;
 import edu.nju.tickets.pojo.Show;
 import edu.nju.tickets.pojo.Venue;
@@ -20,7 +22,9 @@ public class VenueServiceImpl implements VenueService {
 	@Resource  
     private VenueMapper venueMapper;
 	@Resource  
-    private ShowMapper showMapper;  
+    private ShowMapper showMapper;
+	@Resource  
+    private OrderMapper orderMapper;
 
 	@Override
 	public int register(Venue venue) {
@@ -90,6 +94,16 @@ public class VenueServiceImpl implements VenueService {
 			return 0;
 		}
 		return sell;
+	}
+
+	@Override
+	public List<Order> getShowOrdersByUser(String userAccount, int showid) {
+		return orderMapper.getShowOrdersByUser(userAccount, showid);
+	}
+
+	@Override
+	public int checkTicket(int orderid) {
+		return orderMapper.checkTicket(orderid);
 	}
 
 }

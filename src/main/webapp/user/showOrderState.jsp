@@ -2,7 +2,6 @@
 <%
     String path = request.getContextPath();
 	String id = request.getParameter("id");
-	String name = request.getParameter("name");
 %>
 <!DOCTYPE html>
 <html>
@@ -13,17 +12,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>检票登记</title>
+    <title>订单状态</title>
     
 <script type="text/javascript">
 	var path = "<%=path%>";
 	var id = "<%=id%>";
-	var name = "<%=name%>";
 </script>
 
-<style type="text/css">
-
-</style>
 <!-- Custom CSS -->
 <link rel="stylesheet" type="text/css" href="<%=path%>/dist/css/style.min.css" />
 
@@ -52,7 +47,7 @@
                 <!-- Logo -->
                 <!-- ============================================================== -->
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="<%=path%>/venue/index.jsp?id=<%=id%>&name=<%=name%>">
+                    <a class="navbar-brand" href="<%=path%>/user/index.jsp?id=<%=id%>">
                         <!-- Logo icon --><b>
                             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                             <!-- Dark Logo icon -->
@@ -81,19 +76,13 @@
                             <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="<%=path%>/dist/images/venue-main.jpg" alt="user" class="img-circle" width="30"></a>
                             <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
                                 <span class="with-arrow"><span class="bg-primary"></span></span>
-                                <div class="d-flex no-block align-items-center p-15 bg-primary text-white m-b-10">
-                                    <div class=""><img src="<%=path%>/dist/images/venue-main.jpg" alt="user" class="img-circle" width="60"></div>
-                                    <div class="m-l-10">
-                                        <h4 class="m-b-0" id="venueName">场馆名</h4>
-                                    </div>
-                                </div>
-                                <a class="dropdown-item" href="<%=path%>/venue/venueInfo.jsp?id=<%=id%>&name=<%=name%>">修改场馆信息</a>
-                                <a class="dropdown-item" href="<%=path%>/venue/releaseShow.jsp?id=<%=id%>&name=<%=name%>">发布演出</a>
-                                <a class="dropdown-item" href="<%=path%>/venue/sellTicket.jsp?id=<%=id%>&name=<%=name%>">现场售票</a>
-                                <a class="dropdown-item" href="<%=path%>/venue/checkTicket.jsp?id=<%=id%>&name=<%=name%>">检票登记</a>
-                                <a class="dropdown-item" href="<%=path%>/venue/showStatistics.jsp?id=<%=id%>&name=<%=name%>">查看场馆统计信息</a>
+                                <a class="dropdown-item" href="<%=path%>/user/userInfo.jsp?id=<%=id%>">查看个人信息</a>
+                                <a class="dropdown-item" href="<%=path%>/user/bookShow.jsp?id=<%=id%>">演出预定</a>
+                                <a class="dropdown-item" href="<%=path%>/user/cancelShow.jsp?id=<%=id%>">演出退订</a>
+                                <a class="dropdown-item" href="<%=path%>/user/showOrderState.jsp?id=<%=id%>">查看订单状态</a>
+                                <a class="dropdown-item" href="<%=path%>/user/showStatistics.jsp?id=<%=id%>">查看个人统计信息</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="<%=path%>/venue/login.jsp">退出</a>
+                                <a class="dropdown-item" href="<%=path%>/user/login.jsp">退出</a>
                             </div>
                         </li>
                         <!-- ============================================================== -->
@@ -109,27 +98,45 @@
         <!-- ============================================================== -->
         <div class="page-wrapper">
         	<div class="container-fluid">
-        		<div class="row page-titles">
+                <div class="row page-titles">
                     <div class="col-md-5 align-self-center">
-                        <h4 class="text-themecolor">演出场次</h4>
+                        <h4 class="text-themecolor">我的订单</h4>
                     </div>
                     <div class="col-md-7 align-self-center text-right">
                         <div class="d-flex justify-content-end align-items-center">
                         </div>
                     </div>
                 </div>
-				<!-- Row -->
                 <div class="row">
-                    <div class="col-12">
-                        <!-- Row -->
-                        <div class="row" id="showDiv">
-                            
+                    <!-- column -->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">订单信息</h4>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>id</th>
+                                                <th>演出</th>
+                                                <th>座位</th>
+                                                <th>数量</th>
+                                                <th>券后总价</th>
+                                                <th>状态</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="orderTable">
+                                        
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                        <!-- Row -->
                     </div>
                 </div>
-                <!-- End Row -->        		
-        	</div>
+            </div>
+        
         </div>
         <!-- ============================================================== -->
         <!-- End Page wrapper  -->
@@ -165,55 +172,119 @@
     </script>
     
     <script type="text/javascript">
-    
-	    $(function() {
-	        $("#venueName").text(name);
-	    });
 	    
-	    $(document).on("click","#modifyVenue",function(){
-	    	window.location.href = path + "/venue/venueInfo.jsp?id=" + id + "&name=" + name;
-	    })
-    
-    </script>
-    
-    <script type="text/javascript">
-    
     $(function() {
     	$.ajax({
             type: "POST",
-            url: path + "/venue/getShows.action",
+            url: path + "/user/getUserAllOrders.action",
             data: {"id":id},
             dataType: "json",
             success: function (backData) {
-                setShowInfo(backData);
+                setOrderInfo(backData);
             },
             error: function() {
-            	alert("获取演出信息失败");
+            	alert("获取订单信息失败");
             }
         });
     })
     
-    function setShowInfo(shows) {
-    	$("#showDiv").html("");
+    function setOrderInfo(orders) {
+    	$("#orderTable").html("");
         var html = "";
-        for(var i = 0;i<shows.length;i++){
-        	var item = shows[i];
-        	html += "<div class='col-lg-3 col-md-6'>";
-        	html += "<div class='card'>";
-        	
-        	var showName = item.name + "venue" + id;
-        	html += "<img class='card-img-top img-responsive' src='" + path + "/dist/images/venue/" + showName + ".jpg' alt='Card image cap'>";
-        	
-        	html += "<div class='card-body'>";
-        	
-        	html += "<a href='" + path + "/venue/checkShowTicket.jsp?id=" + id + "&name=" + name + "&showid=" + item.id + "' class='btn btn-primary'>" + item.name + "</a>";
-        	
-        	html += "</div>";
-        	html += "</div>";
-        	html += "</div>";
+        for(var i = 0;i<orders.length;i++){
+        	var item = orders[i];
+        	html += "<tr>";
+        	html += "<td>" + item.id + "</td>";
+        	html += "<td>" + item.show.name + "</td>";
+        	html += "<td>" + item.seat + "</td>";
+        	html += "<td>" + item.amount + "</td>";
+        	html += "<td>" + item.price + "</td>";
+        	if(item.state == 1) {
+        		html += "<td>已支付</td>";
+        		html += "<td><button type='button' class='label label-danger refundButton'>退款</button></td>";
+        	} else if(item.state == 2) {
+        		html += "<td>已检票</td>";
+        		html += "<td></td>";
+        	} else if(item.state == 3) {
+        		html += "<td>已退款</td>";
+        		html += "<td></td>";
+        	} else if(item.state == 4) {
+        		html += "<td>待支付</td>";
+        		html += "<td><button type='button' class='label label-danger payButton'>支付</button></td>";
+        	} else if(item.state == 5) {
+        		html += "<td>已失效</td>";
+        		html += "<td></td>";
+        	} else {
+        		html += "<td>错误</td>";
+        	}
+        	html += "</tr>";
         }
-        $("#showDiv").html(html);
+        $("#orderTable").html(html);
     }
+    
+    $(document).on("click",".payButton",function(){
+    	var tr = $(this).closest("tr");
+    	var orderid = tr.find("td:eq(0)").text();
+    	var orderprice = tr.find("td:eq(4)").text();
+    	
+    	
+    	$.ajax({
+            type: "POST",
+            url: path + "/user/payTicket.action",
+            data: {"userid":id,
+            	"orderid":orderid,
+            	"orderPrice":orderprice
+            	},
+            dataType: "json",
+            success: function (backData) {
+            	if (backData == -1) {
+                    alert("账户余额不足");
+                } else if (backData == 0) {
+                	alert("订单已超时15分钟未支付失效");
+                } else if (backData == 1) {
+                	alert("支付成功");
+                	window.location.href = path + "/user/showOrderState.jsp?id=" + id;
+                } else {
+                	alert("不可能的错误");
+                }
+            },
+            error: function() {
+            	alert("服务器错误");
+            }
+        });
+    })
+    
+    $(document).on("click",".refundButton",function(){
+    	var tr = $(this).closest("tr");
+    	var orderid = tr.find("td:eq(0)").text();
+    	var orderprice = tr.find("td:eq(4)").text();
+    	
+    	
+    	$.ajax({
+            type: "POST",
+            url: path + "/user/refundTicket.action",
+            data: {"userid":id,
+            	"orderid":orderid,
+            	"orderPrice":orderprice
+            	},
+            dataType: "json",
+            success: function (backData) {
+            	if (backData == -1) {
+                    alert("不知道啥错误");
+                } else if (backData == 0) {
+                	alert("退款失败");
+                } else if (backData == 1) {
+                	alert("退款成功");
+                	window.location.href = path + "/user/showOrderState.jsp?id=" + id;
+                } else {
+                	alert("不可能的错误");
+                }
+            },
+            error: function() {
+            	alert("服务器退款错误");
+            }
+        });
+    })
     
     </script>
     
